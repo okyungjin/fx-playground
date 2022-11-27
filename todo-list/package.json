@@ -1,0 +1,16 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "description": "Fx Todo List",
+  "main": "app.js",
+  "scripts": {
+    "dev": "parcel index.html"
+  },
+  "keywords": ["fxjs", "fxdom"],
+  "author": "KyungJin Jung",
+  "license": "ISC",
+  "devDependencies": {
+    "fxdom": "^0.8.3",
+    "fxjs": "^0.21.3"
+  }
+}
