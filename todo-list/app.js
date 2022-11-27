@@ -1,11 +1,27 @@
-import { } from 'fxjs';
-import { $, $el, $find } from 'fxdom';
+import { go, strMap, each, map, tap, curry, pipe } from 'fxjs';
+import { $qs, $qsa, $el, $els, $find, $appendTo, $remove, $on, $trigger } from 'fxdom';
 
 const todoInput = document.querySelector('.todo-input');
-const todoList = document.querySelector('.todo-list');
-const todoItem = document.querySelector('.todo-item');
-const todoItemCheckbox = document.querySelector('.todo-item > input');
 const todoAddBtn = document.querySelector('.todo-add-btn');
+
+const Todo = {};
+Todo.list = [];
+Todo.tmpl = todos => `
+  <ul class="todo-list">
+    ${strMap(todo => `
+      <li class="todo-item">
+        <span>${todo.title}</span>
+        <input type="checkbox" />
+      </li>`, todos)}
+  </ul>
+`;
+Todo.render = todos => go(
+  todos,
+  Todo.tmpl,
+  $el,
+  tap(() => each($remove, $qsa('.todo-list'))),
+  $appendTo($qs('.todo-container')),
+);
 
 const createNewTodoByName = todoName => {
   if (!todoName) {
@@ -13,19 +29,9 @@ const createNewTodoByName = todoName => {
     return;
   }
 
-  const li = $el(`
-    <li class="todo-item">
-      <span>${todoName}</span>
-      <input type="checkbox" />
-    </li>
-  `);
-  li.addEventListener('click', toggleTodoItem);
-  
-  const input = $find('input[type="checkbox"]', li);
-  input.addEventListener('click', () => {
-    input.checked = !input.checked;
-  });
-  todoList.appendChild(li);
+  const newTodo = { id: Date.now(), title: todoName };
+  Todo.list = [newTodo, ...Todo.list];
+  Todo.render(Todo.list);
 }
 
 const clearTodoInput = () => {
