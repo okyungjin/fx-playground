@@ -1,8 +1,3 @@
-* {
-  box-sizing: border-box;
-  outline: 0;
-}
-
 :root {
   --color-white: #FFFFFF;
   --color-background: #F0EFE9;
@@ -12,6 +7,16 @@
   --color-green: #59d7a1;
 }
 
+* {
+  box-sizing: border-box;
+  outline: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   display: flex;
   justify-content: center;
@@ -19,13 +24,20 @@ body {
   flex-direction: column;
   background-color: var(--color-background);
   color: var(--color-text);
-  height: 100vh;
 }
 
 .container {
-  padding: 10px 40px;
+  padding: 10px 30px;
   background-color: var(--color-white);
+  width: 400px;
 }
+
+form {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
 
 h1 {
   font-size: 24px;
@@ -36,6 +48,7 @@ h1 {
 .todo-container {
   height: 400px;
   padding: 10px 0;
+  overflow: auto;
 }
 
 .todo-list {
@@ -117,5 +130,7 @@ input[type="text"]:focus {
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  margin-left: 10px;
+  margin-left: 20px;
+  position: relative;
+  top: -3px;
 }
