@@ -7,7 +7,7 @@ body {
   font-family: "Arial", sans-serif;
 }
 
-.wrapper {
+main {
   margin: 0 auto;
   width: 67%;
   min-height: 100vh;
@@ -182,7 +182,7 @@ h1 {
 }
 
 @media only screen and (max-width: 1000px) {
-  .wrapper {
+  main {
     width: 75%;
   }
   .todo-list__item__title {
@@ -191,7 +191,7 @@ h1 {
 }
 
 @media only screen and (max-width: 500px) {
-  .wrapper {
+  main {
     width: 90%;
   }
 }

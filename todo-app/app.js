@@ -1,7 +1,33 @@
 import { go, strMap, tap, each, delay } from 'fxjs';
-import { $qs, $find, $el, $els, $appendTo, $remove, $on, $delegate, $children, $toggleClass, $setVal, $closest } from 'fxdom';
+import { $qs, $find, $el, $appendTo, $remove, $on, $delegate, $children, $toggleClass, $setVal, $closest } from 'fxdom';
 
-go(
+const tmpl = todos => `
+  <main>
+    <h1>TODO</h1>
+    <form class="todo-form">
+      <div class="input-field">
+        <input type="text" id="input--add" class="input" placeholder="Enter todo" />
+        <label for="input--add"></label>
+      </div>
+      <input type="submit" class="button button--add" value="Add" />
+    </form>
+    <ul class="todo-list">
+      ${strMap(Todo.tmpl, todos)}
+    </ul>
+  </main>
+`;
+
+const Todo = {};
+Todo.list = () => ['A', 'B', 'C'];
+Todo.tmpl = (todo) => `
+  <li class="todo-list__item">
+    <span class="todo-list__item__title">${todo}</span>
+    <input class="input input--todo hidden" type="text" value="${todo}">
+    <button class="button button--todo button--edit">Edit</button>
+    <button class="button button--todo button--save hidden">Save</button>
+    <button class="button button--todo button--delete">Delete</button>
+  </li>`;
+Todo.addEvents = () => go(
   $qs('main'),
   $on('submit', e => {
     e.preventDefault();
@@ -36,25 +62,14 @@ go(
       $closest('.todo-list__item'),
       $remove,
     );
-  }),
+  })
 );
 
-const Todo = {};
-Todo.list = () => ['A', 'B', 'C'];
-Todo.tmpl = (todo) => `
-  <li class="todo-list__item">
-    <span class="todo-list__item__title">${todo}</span>
-    <input class="input input--todo hidden" type="text" value="${todo}">
-    <button class="button button--todo button--edit">Edit</button>
-    <button class="button button--todo button--save hidden">Save</button>
-    <button class="button button--todo button--delete">Delete</button>
-  </li>`;
-
 go(
-  Todo.list(),
-  strMap(Todo.tmpl),
-  $els,
-  each($appendTo($qs('.todo-list'))),
+  tmpl(Todo.list()),
+  $el,
+  $appendTo($qs('body')),
+  Todo.addEvents,
 );
 
 function addTodo(newTodo) {
