@@ -1,91 +1,76 @@
-const todoForm = document.querySelector('.todo-form');
-const todoInput = document.querySelector('input');
-const todoCollection = document.querySelector('.todo-list');
+import { go, strMap, tap, each, delay } from 'fxjs';
+import { $qs, $find, $el, $els, $appendTo, $remove, $on, $delegate, $children, $toggleClass, $setVal, $closest } from 'fxdom';
 
-todoForm.addEventListener('submit', addTodo);
+go(
+  $qs('main'),
+  $on('submit', e => {
+    e.preventDefault();
+    go(
+      $qs('#input--add'),
+      tap(el => addTodo(el.value)),
+      $setVal(''),
+    );
+  }),
+  $delegate('click', '.button--edit', ({ currentTarget }) => {
+    go(
+      currentTarget,
+      $closest('.todo-list__item'),
+      $children,
+      each($toggleClass('hidden'))
+    );
+  }),
+  $delegate('click', '.button--save', ({ currentTarget }) => {
+    go(
+      currentTarget,
+      $closest('.todo-list__item'),
+      tap(go(
+        $find('.input--todo'),
+      )),
+      $children,
+      each($toggleClass('hidden'))
+    );
+  }),
+  $delegate('click', '.button--delete', ({ currentTarget }) => {
+    go(
+      currentTarget,
+      $closest('.todo-list__item'),
+      $remove,
+    );
+  }),
+);
 
-function addTodo(e) {
-  if (!todoInput.value) {
-    shakeInputIfValueIsEmpty();
-    return;
-  }
+const Todo = {};
+Todo.list = () => ['A', 'B', 'C'];
+Todo.tmpl = (todo) => `
+  <li class="todo-list__item">
+    <span class="todo-list__item__title">${todo}</span>
+    <input class="input input--todo hidden" type="text" value="${todo}">
+    <button class="button button--todo button--edit">Edit</button>
+    <button class="button button--todo button--save hidden">Save</button>
+    <button class="button button--todo button--delete">Delete</button>
+  </li>`;
 
-  else {
-    // create elements
-    const li = document.createElement('li');
-    const todoTitle = document.createElement('span');
-    const editableInput = document.createElement('input');
-    const editButton = document.createElement('button');
-    const saveButton = document.createElement('button');
-    const deleteButton = document.createElement('button');
+go(
+  Todo.list(),
+  strMap(Todo.tmpl),
+  $els,
+  each($appendTo($qs('.todo-list'))),
+);
 
-    li.classList.add('todo-list__item');
-
-    todoTitle.classList.add('todo-list__item__title');
-    todoTitle.innerText = todoInput.value;
-
-    editableInput.classList.add('input');
-    editableInput.classList.add('input--todo');
-    editableInput.classList.add('hidden');
-    editableInput.type = 'text';
-    editableInput.value = todoInput.value;
-
-    editButton.classList.add('button');
-    editButton.classList.add('button--todo');
-    editButton.classList.add('button--edit');
-    editButton.innerText = 'Edit';
-
-    saveButton.classList.add('button');
-    saveButton.classList.add('button--todo');
-    saveButton.classList.add('button--save');
-    saveButton.classList.add('hidden');
-    saveButton.innerText = 'Save';
-
-    deleteButton.classList.add('button');
-    deleteButton.classList.add('button--todo');
-    deleteButton.classList.add('button--delete');
-    deleteButton.innerText = 'Delete';
-
-    // add elements to todo list
-    li.appendChild(todoTitle);
-    li.appendChild(editableInput);
-    li.appendChild(editButton);
-    li.appendChild(saveButton);
-    li.appendChild(deleteButton);
-    todoCollection.appendChild(li);
-
-    function toggleTodoEditForm() {
-      todoTitle.classList.toggle('hidden');
-      editableInput.classList.toggle('hidden');
-      editButton.classList.toggle('hidden');
-      saveButton.classList.toggle('hidden');
-    }
-
-    // button event listeners
-    editButton.addEventListener('click', () => {
-      toggleTodoEditForm();
-      editableInput.focus();
-    });
-
-    saveButton.addEventListener('click', () => {
-      todoTitle.innerText = editableInput.value;
-      toggleTodoEditForm();
-    });
-
-    deleteButton.addEventListener('click', () => {
-      setTimeout(() => {
-        todoCollection.removeChild(li);
-      }, 100);
-    });
-  }
-  // clear input
-  todoInput.value = '';
-
-  e.preventDefault();
+function addTodo(newTodo) {
+  if (!newTodo) shakeInputIfValueIsEmpty();
+  else go(
+    Todo.tmpl(newTodo),
+    $el,
+    $appendTo($qs('.todo-list')),
+  );
 }
 
 function shakeInputIfValueIsEmpty() {
   const SAHKE_HORIZONTAL = 'shake-horizontal';
-  todoForm.classList.toggle(SAHKE_HORIZONTAL);
-  setTimeout(() => todoForm.classList.toggle(SAHKE_HORIZONTAL), 500);
+  go(
+    $qs('.todo-form'),
+    $toggleClass(SAHKE_HORIZONTAL),
+    delay(500, $toggleClass(SAHKE_HORIZONTAL))
+  );
 }

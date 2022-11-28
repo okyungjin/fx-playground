@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "parcel index.html"
   },
-  "keywords": ["fxjs", "fxdom"],
+  "keywords": [
+    "fxjs",
+    "fxdom"
+  ],
   "author": "KyungJin Jung",
   "license": "ISC",
   "devDependencies": {

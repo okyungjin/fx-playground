@@ -62,16 +62,22 @@ h1 {
 .todo-item {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   padding: 10px;
   cursor: pointer;
 }
 
-.todo-item span {
+.todo-item label {
+  min-width: 70%;
+  max-width: 90%;
   user-select: none;
+  position: relative;
+  top: 2px;
+  overflow: hidden;
+  margin-left: 5px;
 }
 
-.todo-item.done span {
+
+.todo-item.done label {
   text-decoration: line-through;
   color: var(--color-lightgrey);
 }
