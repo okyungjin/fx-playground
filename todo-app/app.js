@@ -79,7 +79,7 @@ go(
 );
 
 function addTodo(newTodo) {
-  if (!newTodo) shakeInputIfValueIsEmpty();
+  if (!newTodo) shakeElement('.todo-form');
   else go(
     Todo.tmpl(newTodo),
     $el,
@@ -87,10 +87,10 @@ function addTodo(newTodo) {
   );
 }
 
-function shakeInputIfValueIsEmpty() {
+function shakeElement(sel) {
   const SAHKE_HORIZONTAL = 'shake-horizontal';
   go(
-    $qs('.todo-form'),
+    $qs(sel),
     $toggleClass(SAHKE_HORIZONTAL),
     delay(500, $toggleClass(SAHKE_HORIZONTAL))
   );
