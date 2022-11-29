@@ -6,7 +6,13 @@ const tmpl = todos => `
     <h1>TODO</h1>
     <form class="todo-form">
       <div class="input-field">
-        <input type="text" id="input--add" class="input" placeholder="Enter todo" />
+        <input 
+          type="text"
+          id="input--add"
+          class="input"
+          placeholder="Enter todo"
+          autocomplete="off"
+        />
         <label for="input--add"></label>
       </div>
       <input type="submit" class="button button--add" value="Add" />
