@@ -1,7 +1,8 @@
-import { go, pipe, strMap, tap, each, delay } from 'fxjs';
-import { $qs, $find, $el, $prependTo, $appendTo, $remove, $on, 
-  $delegate, $children, $toggleClass, $setVal, $closest, $val, $replaceAll } from 'fxdom';
+import { go, pipe, strMap, tap, each } from 'fxjs';
+import { $qs, $find, $el, $prependTo, $appendTo, $remove, $on, $delegate, 
+  $children, $toggleClass, $setVal, $closest, $val, $replaceAll } from 'fxdom';
 import TodoApi from './api/todo';
+import UiHelper from './helper/ui';
 
 const tmpl = todos => `
   <main>
@@ -74,8 +75,21 @@ Todo.addEvents = pipe(
     $on('submit', e => {
       e.preventDefault();
       const addInput = $qs('#input--add');
-      addTodo(addInput.value);
-      $setVal('', addInput)
+      const title = addInput.value;
+
+      if (!title) {
+        UiHelper.shakeElement($qs('.todo-form'));
+        return;
+      }
+
+      go(
+        title,
+        TodoApi.createTodo,
+        Todo.tmpl,
+        $el,
+        $prependTo($qs('.todo-list')),
+        tap(_ => $setVal('', addInput))
+      );
     }),
   ),
 );
@@ -87,23 +101,3 @@ go(
   $appendTo($qs('body')),
   Todo.addEvents,
 );
-
-const addTodo = title => {
-  if (!title) shakeElement($qs('.todo-form'));
-  else go(
-    TodoApi.createTodo(title),
-    Todo.tmpl,
-    $el,
-    $prependTo($qs('.todo-list')),
-  );
-}
-
-const shakeElement = (el) => {
-  const SAHKE_HORIZONTAL = 'shake-horizontal';
-  go(
-    el,
-    $toggleClass(SAHKE_HORIZONTAL),
-    delay(500),
-    $toggleClass(SAHKE_HORIZONTAL)
-  );
-}
