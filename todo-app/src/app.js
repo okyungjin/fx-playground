@@ -52,7 +52,7 @@ Todo.addEvents = pipe(
       todoItem,
       $find('.input--todo'),
       $val,
-      title => ({ id: todoItem.dataset.todoId, title })
+      title => ({ id: parseInt(todoItem.dataset.todoId), title })
     );
     go(
       newTodo,
@@ -67,6 +67,7 @@ Todo.addEvents = pipe(
       go(
         currentTarget,
         $closest('.todo-list__item'),
+        tap(({ dataset }) => TodoApi.deleteTodo(parseInt(dataset.todoId))),
         $remove);
   }),
   pipe(
