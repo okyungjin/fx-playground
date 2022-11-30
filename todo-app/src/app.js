@@ -1,4 +1,4 @@
-import { delay, go, pipe, strMap, tap, each } from 'fxjs';
+import { go, pipe, strMap, tap, each } from 'fxjs';
 import { $qs, $find, $el, $prependTo, $appendTo, $on, $delegate, 
   $children, $toggleClass, $setVal, $closest, $val, $replaceAll, $remove } from 'fxdom';
 import TodoApi from './api/todo';
