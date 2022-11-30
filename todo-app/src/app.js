@@ -1,4 +1,4 @@
-import { go, pipe, strMap, tap, each } from 'fxjs';
+import { delay, go, pipe, strMap, tap, each } from 'fxjs';
 import { $qs, $find, $el, $prependTo, $appendTo, $on, $delegate, 
   $children, $toggleClass, $setVal, $closest, $val, $replaceAll, $remove } from 'fxdom';
 import TodoApi from './api/todo';
@@ -54,21 +54,22 @@ Todo.addEvents = pipe(
       $val,
       title => ({ id: parseInt(todoItem.dataset.todoId), title })
     );
-    go(
+    UiHelper.loading(go(
       newTodo,
       TodoApi.updateTodo,
       Todo.tmpl,
       $el,
       $replaceAll(todoItem)
-    );
+    ));
   }),
   $delegate('click', '.button--delete', async ({ currentTarget }) => {
     await UiHelper.confirm('정말 삭제하시겠습니까?') && 
-      go(
+      UiHelper.loading(go(
         currentTarget,
         $closest('.todo-list__item'),
         tap(({ dataset }) => TodoApi.deleteTodo(parseInt(dataset.todoId))),
-        $remove);
+        $remove)
+      );
   }),
   pipe(
     $find('.todo-form'),
@@ -82,23 +83,22 @@ Todo.addEvents = pipe(
         return;
       }
 
-      go(
+      UiHelper.loading(go(
         title,
         TodoApi.createTodo,
         Todo.tmpl,
         $el,
         $prependTo($qs('.todo-list')),
         tap(_ => $setVal('', addInput))
-      );
+      ));
     }),
   ),
 );
 
-go(
+UiHelper.loading(go(
   TodoApi.fetchTodos(),
   tmpl,
   $el,
   $appendTo($qs('body')),
-  Todo.addEvents,
+  Todo.addEvents)
 );
-
