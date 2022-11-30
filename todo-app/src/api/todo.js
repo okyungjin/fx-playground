@@ -36,7 +36,7 @@ const createTodo = (title) =>
 const deleteTodo = (todoId) =>
   $del(`${API_URI}/todos/${todoId}`, undefined);
 
-const updateTodo = ({ todoId, title }) => 
+const updateTodo = ({ id: todoId, title }) => 
   $patch(`${API_URI}/todos/${todoId}`, { title });
 
 export default {
