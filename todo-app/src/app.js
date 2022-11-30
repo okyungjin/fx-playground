@@ -1,6 +1,6 @@
 import { go, pipe, strMap, tap, each } from 'fxjs';
-import { $qs, $find, $el, $prependTo, $appendTo, $remove, $on, $delegate, 
-  $children, $toggleClass, $setVal, $closest, $val, $replaceAll } from 'fxdom';
+import { $qs, $find, $el, $prependTo, $appendTo, $on, $delegate, 
+  $children, $toggleClass, $setVal, $closest, $val, $replaceAll, $remove } from 'fxdom';
 import TodoApi from './api/todo';
 import UiHelper from './helper/ui';
 
@@ -62,13 +62,12 @@ Todo.addEvents = pipe(
       $replaceAll(todoItem)
     );
   }),
-  $delegate('click', '.button--delete', ({ currentTarget }) => {
-    go(
-      currentTarget,
-      $closest('.todo-list__item'),
-      tap(({ dataset }) => TodoApi.deleteTodo(parseInt(dataset.todoId))),
-      $remove,
-    );
+  $delegate('click', '.button--delete', async ({ currentTarget }) => {
+    await UiHelper.confirm('정말 삭제하시겠습니까?') && 
+      go(
+        currentTarget,
+        $closest('.todo-list__item'),
+        $remove);
   }),
   pipe(
     $find('.todo-form'),
@@ -101,3 +100,4 @@ go(
   $appendTo($qs('body')),
   Todo.addEvents,
 );
+
