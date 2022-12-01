@@ -12,13 +12,12 @@ const tmpl = todos => `
         <input 
           type="text"
           id="input--add"
-          class="input"
           placeholder="Enter todo"
           autocomplete="off"
         />
         <label for="input--add"></label>
       </div>
-      <input type="submit" class="button button--add" value="Add" />
+      <input type="submit" class="button--add" value="Add" />
     </form>
     <ul class="todo-list">
       ${strMap(Todo.tmpl, todos)}
