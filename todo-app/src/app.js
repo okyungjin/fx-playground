@@ -6,6 +6,7 @@ import UiHelper from './helper/ui';
 
 const tmpl = todos => `
   <main>
+    <button type="button" id="show">Show success toast</button>
     <h1>TODO</h1>
     <form class="todo-form">
       <div class="input-field">
@@ -126,5 +127,17 @@ UiHelper.loading(go(
   tmpl,
   $el,
   $appendTo($qs('body')),
-  Todo.addEvents)
+  Todo.addEvents,
+  tap(_ => {
+      const addShowToastEvent = $on('click', (e) => {
+        UiHelper.toast('success', 3000, 'This is title', 'This is message');
+      });
+      const btn = $qs('#show');
+      addShowToastEvent(btn);
+      console.log(btn)
+    }
+  ))
 );
+
+
+

@@ -1,11 +1,7 @@
+@import './variables.css';
 @import './message.css';
 @import './loading.css';
-
-:root {
-  --color-drakgray: #353535;
-  --color-darkgreen: #3c6e71;
-  --color-darkblue: #284b63;
-}
+@import './toast.css';
 
 html,
 body {
