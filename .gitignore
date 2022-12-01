@@ -4,3 +4,4 @@ dist
 tempCodeRunnerFile.*
 .vscode
 .idea
+.DS_Store
