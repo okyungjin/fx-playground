@@ -59,7 +59,7 @@ h1 {
   width: calc(100% - 1rem);
 }
 
-.input {
+input {
   height: 2rem;
   margin: 0;
   padding: 0 0.5rem;
@@ -71,17 +71,18 @@ h1 {
   color: black;
 }
 
-.input:focus {
+input:focus {
   outline: none;
   filter: brightness(0.7);
 }
 
 .input--todo {
+  width: 100%;
   border-bottom: 1.5px solid rgb(33, 136, 56);
   color: rgb(33, 136, 56);
 }
 
-.button {
+button {
   height: 2rem;
   font-size: 1.1rem;
   font-weight: bold;
@@ -97,7 +98,7 @@ h1 {
   color: var(--color-darkblue)
 }
 
-.button:hover {
+button:hover {
   cursor: pointer;
   filter: brightness(0.9);
 }
@@ -133,21 +134,25 @@ h1 {
 }
 
 .todo-list__item {
+  display: flex;
   list-style-type: none;
   margin: 0;
   padding: 1rem 0;
-  border-top: 0.1rem solid rgba(255, 255, 255, 0.6);
-  display: grid;
-  grid-row-gap: 1rem;
-  grid-template-columns: 1fr auto auto;
 }
 
-.todo-list__item__title {
+.todo__title {
+  font-size: 1.1rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-left: 0.5rem;
   overflow-x: auto;
+}
+
+.todo-list__item.completed > .todo__title {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .hidden {

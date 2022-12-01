@@ -29,12 +29,13 @@ const tmpl = todos => `
 const Todo = {};
 
 Todo.tmpl = (todo) => `
-  <li class="todo-list__item" data-todo-id=${todo.id}>
-    <span class="todo-list__item__title">${todo.title}</span>
-    <input class="input input--todo hidden" type="text" value="${todo.title}">
-    <button class="button button--todo button--edit">Edit</button>
-    <button class="button button--todo button--save hidden">Save</button>
-    <button class="button button--todo button--delete">Delete</button>
+  <li class="todo-list__item ${todo.completed ? 'completed' : ''}" data-todo-id=${todo.id}">
+    <input type="checkbox" id="${todo.id}" class="todo__checkbox" ${todo.completed ? 'checked' : '' }/>
+    <label for="${todo.id}" class="todo__title">${todo.title}</label>
+    <input class="input--todo hidden" type="text" value="${todo.title}">
+    <button class="button--todo button--edit">Edit</button>
+    <button class="button--todo button--save hidden">Save</button>
+    <button class="button--todo button--delete">Delete</button>
   </li>`;
   
 Todo.addEvents = pipe(
@@ -71,6 +72,11 @@ Todo.addEvents = pipe(
         $remove)
       );
   }),
+  $delegate('change', '.todo__checkbox', ({ target }) => go(
+    target,
+    $closest('.todo-list__item'),
+    $toggleClass('completed'))
+  ),
   pipe(
     $find('.todo-form'),
     $on('submit', e => {
