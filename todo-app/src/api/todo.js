@@ -1,18 +1,4 @@
-import { $get, $post, $del } from 'fxdom';
-import { curry, defaults, go } from 'fxjs';
-
-const $patch = curry((url, data, headers) => go(
-  fetch(url, {
-    method: 'PATCH',
-    body: JSON.stringify(data),
-    headers: defaults({
-      'Content-type': 'application/json; charset=UTF-8'
-    }, headers),
-  }),
-  resJSON,
-));
-
-const resJSON = (res) => res.ok ? res.json() : go(res.json(), (v) => Promise.reject(v));
+import { $get, $post, $del, $put } from 'fxdom';
 
 const API_URI = 'https://jsonplaceholder.typicode.com';
 const fakeData = {
@@ -36,8 +22,8 @@ const createTodo = (title) =>
 const deleteTodo = (todoId) =>
   $del(`${API_URI}/todos/${todoId}`, undefined);
 
-const updateTodo = ({ id: todoId, title }) => 
-  $patch(`${API_URI}/todos/${todoId}`, { title });
+const updateTodo = ({ todoId, title, completed }) =>
+  $put(`${API_URI}/todos/${todoId}`, { id: todoId, title, completed });
 
 export default {
   fetchTodos,
