@@ -1,39 +1,45 @@
+import { go, pipe, tap, log, delay } from 'fxjs';
+import {$qs, $el, $appendTo, $addClass, $on, $removeClass} from 'fxdom';
+
 class Toast {
   constructor(options) {
     this.options = {};
-    this._rootElement = document.querySelector('body');
+    this._rootElement = $qs('body');
     this.#init(options);
   }
 
   showToast() {
-    const defaultToastContainer = document.createElement('div');
-    defaultToastContainer.id = 'toast-container';
+    const toastContainer = go(
+      $qs('#toast-container') ?? $el('<div id="toast-container"></div>'),
+      $appendTo(this._rootElement),
+    );
 
-    const toastContainer = document.querySelector('#toast-container') || defaultToastContainer;
-    this._rootElement.appendChild(toastContainer);
+    const toastTmpl = options => `
+      <div class="toast toast__${options.type}">
+        <span>${options.text}</span>
+      </div>
+    `;
 
-    const toast = document.createElement('div');
-    const span = document.createElement('span');
-    span.innerText = this.options.text;
-    toast.appendChild(span);
-    toast.classList.add('toast');
-    toast.classList.add(`toast__${this.options.type}`);
-    setTimeout(() => toast.classList.add('toast--show'), 100);
+    const addToast = options => go(
+      options,
+      toastTmpl,
+      $el,
+      tap(el => setTimeout(() => $addClass('toast--show', el), 100)),
+      $on('transitionend', ({ currentTarget }) => {
+        log(currentTarget)
+        if (currentTarget.classList.contains('toast--hidden')) {
+          currentTarget.remove();
+        }
+      }),
+      $on('click', ({ currentTarget }) => {
+        currentTarget.classList.add('toast--hidden');
+      }),
+      $appendTo(toastContainer),
+      delay(options.duration),
+      $addClass('toast--hidden'),
+    );
 
-    toast.addEventListener('transitionend', function({ target }) {
-      if (target.classList.contains('toast--hidden'))
-        target.remove();
-    });
-
-    toast.addEventListener('click', function({ currentTarget }) {
-      toast.classList.add('toast--hidden');
-    });
-
-    setTimeout(() => {
-      toast.classList.add('toast--hidden');
-    }, this.options.duration);
-
-    toastContainer.insertBefore(toast, null);
+    addToast(this.options);
   }
 
   #init(options) {

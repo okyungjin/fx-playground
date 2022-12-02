@@ -19,7 +19,7 @@ warningBtn.addEventListener('click', () => {
     type: 'warning',
   });
   toast.showToast();
-})
+});
 
 errorBtn.addEventListener('click', () => {
   const toast = Toast({
@@ -28,4 +28,4 @@ errorBtn.addEventListener('click', () => {
     type: 'error',
   });
   toast.showToast();
-})
+});
