@@ -1,13 +1,13 @@
 import { $get, $post, $del, $put } from 'fxdom';
 
-const API_URI = 'https://jsonplaceholder.typicode.com';
+const API_URI = 'http://localhost:3000';
 const fakeData = {
   userId: 1,
   body: '',
 };
 
-const fetchTodos = ({ offset = 0, limit = 10 } = {}) => 
-  $get(`${API_URI}/todos`, { _start: offset, _limit: limit });
+const fetchTodos = ({ offset = 0, limit = 10 } = {}) =>
+  $get(`${API_URI}/todos`, { offset, limit });
 
 // jsonplaceholder api에 create, delete, update가 실제로 동작하는 것은 아니라서,
 // id가 중복되는 것을 방지하기 위해 추가함.
