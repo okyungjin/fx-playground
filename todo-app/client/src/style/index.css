@@ -1,5 +1,5 @@
-@import './message.css';
-@import './loading.css';
+@import 'message.css';
+@import 'loading.css';
 
 :root {
   --color-drakgray: #353535;
