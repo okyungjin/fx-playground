@@ -5,3 +5,4 @@ tempCodeRunnerFile.*
 .vscode
 .idea
 .DS_Store
+.parcel-cache

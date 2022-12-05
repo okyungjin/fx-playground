@@ -12,5 +12,8 @@
   "devDependencies": {
     "fxdom": "^0.8.3",
     "fxjs": "^0.21.3"
+  },
+  "dependencies": {
+    "parcel": "^2.8.0"
   }
 }
