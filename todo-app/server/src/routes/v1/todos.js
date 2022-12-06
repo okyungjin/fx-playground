@@ -1,59 +1,63 @@
 const express = require('express');
+const { pick } = require('fxjs');
 const router = express.Router();
 const { POOL: { QUERY, QUERY1, VALUES, SET }} = require('../../config/database');
 
-// TODO: how to select column by camelCase
-
-router.get('/', async (req, res) => {
-  // TODO: process offset and limit
-  // TODO: add 'show deleted' option
-  const { offset, limit, showDeleted = false } = req.params;
-  const todos = await QUERY `
+router.get('/', async (req, res, next) => {
+  try {
+    const todos = await QUERY `
     SELECT *
-    FROM todo
-    WHERE deleted=${showDeleted}
-    ORDER BY id DESC`;
-  res.status(200).json(todos);
+    FROM todos
+    WHERE is_hidden=false
+    ORDER BY todo_id DESC`;
+    res.status(200).json(todos);
+  } catch (e) {
+    next(e);
+  }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const { body: todo } = req;
-  const createdTodo = await QUERY1 `
-    INSERT INTO todo
-    ${VALUES(todo)}
+  try {
+    const createdTodo = await QUERY1 `
+    INSERT INTO todos
+    ${VALUES(pick('title', todo))}
     RETURNING *;
   `;
-  res.status(201).json(createdTodo);
+    res.status(201).json(createdTodo);
+  } catch (e) {
+    next(e);
+  }
 });
 
-router.get('/:todoId', async (req, res) => {
-  const { todoId, showDeleted = false } = req.params;
+router.get('/:todo_id', async (req, res) => {
+  const { todo_id } = req.params;
   const todo = await QUERY1 `
     SELECT *
-    FROM todo
-    WHERE deleted=${showDeleted} AND id=${todoId}
-    ORDER BY id DESC`;
+    FROM todos
+    WHERE todo_id=${todo_id}
+    ORDER BY todo_id DESC`;
   res.status(200).json(todo);
 });
 
-router.put('/:todoId', async (req, res) => {
+router.put('/:todo_id', async (req, res) => {
   const { body: todo } = req;
-  const { todoId } = req.params;
+  const { todo_id } = req.params;
   const updatedTodo = await QUERY1 `
-    UPDATE todo
-    ${SET(todo)}
-    WHERE id=${todoId}
+    UPDATE todos
+    ${SET(pick(['title', 'is_completed', 'is_hidden'], todo))}
+    WHERE todo_id=${todo_id}
     RETURNING *;
   `;
   res.status(200).json(updatedTodo);
 });
 
-router.delete('/:todoId', async (req, res) => {
-  const { todoId } = req.params;
+router.delete('/:todo_id', async (req, res) => {
+  const { todo_id } = req.params;
   const deletedTodo = await QUERY1 `
-    UPDATE todo
+    UPDATE todos
     ${SET({ deleted: true })}
-    WHERE id=${todoId}
+    WHERE todo_id=${todo_id}
     RETURNING *;
   `;
   res.status(200).json(deletedTodo);

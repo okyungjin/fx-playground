@@ -9,7 +9,7 @@ const tmpl = todos => `
     <h1>TODO</h1>
     <form class="todo-form">
       <div class="input-field">
-        <input 
+        <input
           type="text"
           id="input--add"
           placeholder="Enter todo"
@@ -28,15 +28,15 @@ const tmpl = todos => `
 const Todo = {};
 
 Todo.tmpl = (todo) => `
-  <li class="todo-list__item ${todo.completed ? 'completed' : ''}" data-todo-id=${todo.id}">
-    <input type="checkbox" id="todo${todo.id}" class="todo__completed" ${todo.completed ? 'checked' : '' }/>
-    <label for="todo${todo.id}" class="todo__title">${todo.title}</label>
+  <li class="todo-list__item ${todo.is_completed ? 'completed' : ''}" data-todo-id=${todo.todo_id}">
+    <input type="checkbox" id="todo${todo.todo_id}" class="todo__completed" ${todo.is_completed ? 'checked' : '' }/>
+    <label for="todo${todo.todo_id}" class="todo__title">${todo.title}</label>
     <input class="input--todo hidden" type="text" value="${todo.title}">
     <button class="button--todo button--edit">Edit</button>
     <button class="button--todo button--save hidden">Save</button>
     <button class="button--todo button--delete">Delete</button>
   </li>`;
-  
+
 Todo.addEvents = pipe(
   $delegate('click', '.button--edit', ({ currentTarget }) => {
     go(
@@ -53,9 +53,9 @@ Todo.addEvents = pipe(
       $find('.input--todo'),
       $val,
       title => ({
-        todoId: parseInt(todoItem.dataset.todoId),
+        todo_id: parseInt(todoItem.dataset.todoId),
         title,
-        completed: $hasClass('completed', todoItem)
+        is_completed: $hasClass('completed', todoItem)
       }),
     );
 
@@ -72,7 +72,7 @@ Todo.addEvents = pipe(
     ));
   }),
   $delegate('click', '.button--delete', async ({ currentTarget }) => {
-    await UiHelper.confirm('정말 삭제하시겠습니까?') && 
+    await UiHelper.confirm('정말 삭제하시겠습니까?') &&
       UiHelper.loading(go(
         currentTarget,
         $closest('.todo-list__item'),
