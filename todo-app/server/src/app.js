@@ -2,15 +2,14 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const corsOptions = require('./config/cors');
-const indexRouter = require('./routes');
-const todosRouter = require('./routes/todos');
+const v1 = require('./routes/v1');
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
+app.use(express.json());
 app.use(cors(corsOptions));
-app.use('/', indexRouter);
-app.use('/todos', todosRouter);
+app.use('/api/v1', v1);
 
 app.use((req, res, next) => {
   const error = new Error(`router for ${req.method} ${req.url} is not exist.`)
