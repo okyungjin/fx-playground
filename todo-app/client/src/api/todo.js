@@ -1,29 +1,27 @@
-import { $get, $post, $del, $put } from 'fxdom';
+import axios from 'axios';
 
-const API_URI = 'http://localhost:3000';
-const fakeData = {
-  userId: 1,
-  body: '',
-};
+const API_URL = 'http://localhost:3000/api'
+axios.defaults.baseURL = API_URL;
 
 const fetchTodos = ({ offset = 0, limit = 10 } = {}) =>
-  $get(`${API_URI}/todos`, { offset, limit });
+  axios.get('/v1/todos').then(({ data }) => data);
 
-// jsonplaceholder api에 create, delete, update가 실제로 동작하는 것은 아니라서,
-// id가 중복되는 것을 방지하기 위해 추가함.
-let todoCount = 200;
-const createTodo = (title) => 
-  $post(`${API_URI}/todos`, {
+const createTodo = (title) =>
+  axios.post('/v1/todos', {
     title,
-    userId: fakeData.userId,
-    body: fakeData.body,
-  }).then(res => ({ ...res, id: ++todoCount }));
+    body: '',
+  }).then(({ data }) => data);
 
 const deleteTodo = (todoId) =>
-  $del(`${API_URI}/todos/${todoId}`, undefined);
+  axios.delete(`/v1/todos/${todoId}`).then(({ data }) => data);
 
 const updateTodo = ({ todoId, title, completed }) =>
-  $put(`${API_URI}/todos/${todoId}`, { id: todoId, title, completed });
+  axios.put(`/v1/todos/${todoId}`, {
+    id: todoId,
+    title,
+    completed,
+    deleted: false,
+  }).then(({ data }) => data);
 
 export default {
   fetchTodos,
