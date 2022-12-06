@@ -1,10 +1,10 @@
 # Todo App 
-## Run
+### Run
 ```bash
-npm install -g parcel-bundler
 npm i
-npm run dev
+npm start
 ```
 
-## API
-https://jsonplaceholder.typicode.com/guide/
+### URL
+- client: http://localhost:1234
+- server: http://localhost:3000
