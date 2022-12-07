@@ -63,7 +63,7 @@ router.delete('/:todo_id', todoIdErrorHandler, async (req, res, next) => {
   try {
     const deletedTodo = await QUERY1`
       UPDATE todos
-      ${SET({ deleted_at: new Date().toISOString() })}
+      ${SET({ deleted_at: new Date() })}
       WHERE ${EQ({ todo_id })}
       RETURNING *;
     `;
