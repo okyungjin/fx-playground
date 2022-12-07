@@ -27,6 +27,32 @@ const tmpl = todos => `
 
 const Todo = {};
 
+const handleSaveTodoEvent = ({ currentTarget }) => {
+  const todoItem = $closest('.todo-list__item', currentTarget);
+  const newTodo = go(
+    todoItem,
+    $find('.input--todo'),
+    $val,
+    title => ({
+      todo_id: parseInt(todoItem.dataset.todoId),
+      title,
+      is_completed: $hasClass('completed', todoItem)
+    }),
+  );
+
+  // TODO: 이런 검사 로직은 어떻게 넣으면 좋을지 고민해보기
+  if (!newTodo.todo_id) throw new Error();
+
+  // TODO: 오류가 발생하면 loading이 중단되고 toast message로 유저에게 알려주기
+  UiHelper.loading(go(
+    newTodo,
+    TodoApi.updateTodo,
+    Todo.tmpl,
+    $el,
+    $replaceAll(todoItem)
+  ));
+};
+
 Todo.tmpl = (todo) => `
   <li class="todo-list__item ${todo.is_completed ? 'completed' : ''}" data-todo-id=${todo.todo_id}">
     <input type="checkbox" id="todo${todo.todo_id}" class="todo__completed" ${todo.is_completed ? 'checked' : '' }/>
@@ -46,30 +72,9 @@ Todo.addEvents = pipe(
       each($toggleClass('hidden'))
     );
   }),
-  $delegate('click', '.button--save', ({ currentTarget }) => {
-    const todoItem = $closest('.todo-list__item', currentTarget);
-    const newTodo = go(
-      todoItem,
-      $find('.input--todo'),
-      $val,
-      title => ({
-        todo_id: parseInt(todoItem.dataset.todoId),
-        title,
-        is_completed: $hasClass('completed', todoItem)
-      }),
-    );
-
-    // TODO: 이런 검사 로직은 어떻게 넣으면 좋을지 고민해보기
-    if (!newTodo.todo_id) throw new Error();
-
-    // TODO: 오류가 발생하면 loading이 중단되고 toast message로 유저에게 알려주기
-    UiHelper.loading(go(
-      newTodo,
-      TodoApi.updateTodo,
-      Todo.tmpl,
-      $el,
-      $replaceAll(todoItem)
-    ));
+  $delegate('click', '.button--save', handleSaveTodoEvent),
+  $delegate('keyup', '.input--todo', (e) => {
+    if (e.key === 'Enter') handleSaveTodoEvent(e);
   }),
   $delegate('click', '.button--delete', async ({ currentTarget }) => {
     await UiHelper.confirm('정말 삭제하시겠습니까?') &&
