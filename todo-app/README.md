@@ -4,6 +4,7 @@ FxJS, FxDOM, FxSQL로 만들어보는 Todo App
   - [Run](#run)
   - [URL](#url)
   - [.env](#env)
+  - [DDL](#ddl)
 - [TIL](#til)
   - [1) 데이터베이스 네이밍 컨벤션](#1-데이터베이스-네이밍-컨벤션)
   - [2) 변수명 컨벤션](#2-변수명-컨벤션)
@@ -31,6 +32,17 @@ DB_USER=""
 DB_DATABASE=""
 DB_TABLE=""
 DB_PASSWORD=""
+```
+
+### DDL
+```sql
+CREATE TABLE todos (
+  todo_id SERIAL PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  is_completed BOOLEAN DEFAULT false NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+  deleted_at TIMESTAMP
+);
 ```
 
 <br>
