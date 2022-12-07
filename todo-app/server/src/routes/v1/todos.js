@@ -37,24 +37,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/:todo_id', async (req, res, next) => {
-  const { todo_id } = req.params;
-  if (!todo_id) {
-    todoIdErrorHandler(next);
-    return;
-  }
-  try {
-    const todo = await QUERY1`
-      SELECT *
-      FROM todos
-      WHERE ${EQ(todo_id)}
-    `;
-    res.status(200).json(todo);
-  } catch (e) {
-    next(e);
-  }
-});
-
 router.put('/:todo_id', async (req, res, next) => {
   const { body: todo } = req;
   const { todo_id } = req.params;
