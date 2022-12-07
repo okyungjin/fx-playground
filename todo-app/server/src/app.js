@@ -8,6 +8,7 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 app.use('/api/v1', v1);
 
@@ -17,12 +18,13 @@ app.use((req, res, next) => {
   next(error);
 });
 
-app.use((err, res, req, next) => {
-  console.log(err);
-  res.locals.meesage = err.message;
-  res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
-  res.status(err.status || 500);
-  res.render('error');
+app.use((err, req, res) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || 'Internal server error.';
+  res.status(errorStatus).json({
+    status: errorStatus,
+    message: errorMessage,
+  });
 });
 
 app.listen(app.get('port'), () => {

@@ -9,7 +9,7 @@ const tmpl = todos => `
     <h1>TODO</h1>
     <form class="todo-form">
       <div class="input-field">
-        <input 
+        <input
           type="text"
           id="input--add"
           placeholder="Enter todo"
@@ -28,15 +28,15 @@ const tmpl = todos => `
 const Todo = {};
 
 Todo.tmpl = (todo) => `
-  <li class="todo-list__item ${todo.completed ? 'completed' : ''}" data-todo-id=${todo.id}">
-    <input type="checkbox" id="todo${todo.id}" class="todo__completed" ${todo.completed ? 'checked' : '' }/>
-    <label for="todo${todo.id}" class="todo__title">${todo.title}</label>
+  <li class="todo-list__item ${todo.is_completed ? 'completed' : ''}" data-todo-id=${todo.todo_id}">
+    <input type="checkbox" id="todo${todo.todo_id}" class="todo__completed" ${todo.is_completed ? 'checked' : '' }/>
+    <label for="todo${todo.todo_id}" class="todo__title">${todo.title}</label>
     <input class="input--todo hidden" type="text" value="${todo.title}">
     <button class="button--todo button--edit">Edit</button>
     <button class="button--todo button--save hidden">Save</button>
     <button class="button--todo button--delete">Delete</button>
   </li>`;
-  
+
 Todo.addEvents = pipe(
   $delegate('click', '.button--edit', ({ currentTarget }) => {
     go(
@@ -53,14 +53,14 @@ Todo.addEvents = pipe(
       $find('.input--todo'),
       $val,
       title => ({
-        todoId: parseInt(todoItem.dataset.todoId),
+        todo_id: parseInt(todoItem.dataset.todoId),
         title,
-        completed: $hasClass('completed', todoItem)
+        is_completed: $hasClass('completed', todoItem)
       }),
     );
 
     // TODO: 이런 검사 로직은 어떻게 넣으면 좋을지 고민해보기
-    if (!newTodo.todoId) throw new Error();
+    if (!newTodo.todo_id) throw new Error();
 
     // TODO: 오류가 발생하면 loading이 중단되고 toast message로 유저에게 알려주기
     UiHelper.loading(go(
@@ -72,7 +72,7 @@ Todo.addEvents = pipe(
     ));
   }),
   $delegate('click', '.button--delete', async ({ currentTarget }) => {
-    await UiHelper.confirm('정말 삭제하시겠습니까?') && 
+    await UiHelper.confirm('정말 삭제하시겠습니까?') &&
       UiHelper.loading(go(
         currentTarget,
         $closest('.todo-list__item'),
@@ -83,9 +83,9 @@ Todo.addEvents = pipe(
   $delegate('change', '.todo__completed', ({ target }) => {
     const todoItem = $closest('.todo-list__item', target);
     const todoToUpdate = {
-      todoId: parseInt(todoItem.dataset.todoId),
+      todo_id: parseInt(todoItem.dataset.todoId),
       title: $text($find('.todo__title', todoItem)),
-      completed: !$hasClass('completed', todoItem)
+      is_completed: !$hasClass('completed', todoItem)
     };
 
     go(
