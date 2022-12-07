@@ -3,11 +3,15 @@ const { pick } = require('fxjs');
 const router = express.Router();
 const { POOL: { QUERY, QUERY1, EQ, VALUES, SET }} = require('../../config/database');
 
-const todoIdErrorHandler = (next) => {
-  const error = new Error('todo_id is required.');
-  error.status = 400;
-  next(error);
-};
+const todoIdErrorHandler = (req, res, next) => {
+  const { todo_id } = req.params;
+  if (todo_id) next();
+  else {
+    const error = new Error('todo_id is required.');
+    error.status = 400;
+    next(error);
+  }
+}
 
 router.get('/', async (req, res, next) => {
   try {
@@ -37,13 +41,9 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/:todo_id', async (req, res, next) => {
+router.put('/:todo_id', todoIdErrorHandler, async (req, res, next) => {
   const { body: todo } = req;
   const { todo_id } = req.params;
-  if (!todo_id) {
-    todoIdErrorHandler(next);
-    return;
-  }
   try {
     const updatedTodo = await QUERY1`
       UPDATE todos
@@ -57,12 +57,9 @@ router.put('/:todo_id', async (req, res, next) => {
   }
 });
 
-router.delete('/:todo_id', async (req, res, next) => {
+
+router.delete('/:todo_id', todoIdErrorHandler, async (req, res, next) => {
   const { todo_id } = req.params;
-  if (!todo_id) {
-    todoIdErrorHandler(next);
-    return;
-  }
   try {
     const deletedTodo = await QUERY1`
       UPDATE todos
