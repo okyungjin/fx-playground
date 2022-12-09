@@ -36,14 +36,14 @@ const renderNavbar = () => go(
   [{ name: '프론트엔드', id: 'frontend' }, { name: '백엔드', id: 'backend' }, { name: '인프라', id: 'infra' }, { name: '알고리즘', id: 'algorithm' }],
   Navbar.tmpl,
   $el,
-  $appendTo($qs('header'))
+  $appendTo($qs('body'))
 );
 
 const renderPosts = () => go(
   PostsApi.fetchPosts(),
   Posts.tmpl,
   $el,
-  $appendTo($qs('main'))
+  $appendTo($qs('body'))
 );
 
 renderNavbar();
