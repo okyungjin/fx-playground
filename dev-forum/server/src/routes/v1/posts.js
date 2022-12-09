@@ -18,7 +18,9 @@ router.get('/', async (req, res, next) => {
           query: SQL`WHERE is_hidden = false`
         }}
     `;
-    res.status(200).json(posts);
+    // TODO: sort by using SQL
+    const sorted = posts.sort((a, b) => a.id > b.id ? 1 : -1);
+    res.status(200).json(sorted);
   } catch (e) {
     next(e);
   }

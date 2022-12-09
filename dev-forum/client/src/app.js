@@ -1,14 +1,15 @@
 import PostsApi from './api/posts';
 import { $el, $appendTo, $qs } from 'fxdom';
-import { go, pipe, strMap } from 'fxjs';
+import { go, pipe, tap, strMap } from 'fxjs';
 
 const Navbar = {};
 Navbar.tmpl = (navs) => `
   <nav class="navbar">
-    <ul class="navbar__content">
+    <h1 class="logo"><a href="#">Logo</a></h1>
+    <ul class="menus">
       ${strMap(nav =>
-        `<li class="navbar__list">
-          <a href="${nav.id}">${nav.name}</a>
+        `<li class="menu ${nav.klass ?? ''}">
+          <a href="${nav.id}"><span>${nav.name}</span></a>
         </li>
       `, navs)}
     </ul>
@@ -17,31 +18,50 @@ Navbar.tmpl = (navs) => `
 
 const Posts = {};
 Posts.tmpl = posts => `
-  <div class="post">
-    <ul class="post__content">
+  <div class="posts-container">
+    <table class="posts">
+     <ul>
       ${strMap(post => `
-        <li class="post__list">
-          <a class="post__board" href="${post._.board.id}">${post._.board.name}</a>
-          <span class="post__title">${post.title}</span>
-          <span class="post__likes">좋아요: ${post._.posts_likes}</span>
-          <span class="post__author">작성자: ${post._.user.name}</span>
+        <li class="post">
+          <section class="header">
+            <span class="author">${post._.user.name}</span>
+            <span class="timestamp">· 1 day ago</span>
+
+          </section>
+          <section class="body">
+            <div>
+              <div class="title">${post.title}</div>
+              <div class="desc">${post.description}</div>
+            </div>
+            <img class="thumbnail ${post.image_url ? '' : 'hidden'}" src="${post.image_url}" />
+          </section>
+          <section class="footer">
+            <span class="board">
+              <a href="${post._.board.id}">${post._.board.name}</a>
+            </span>
+            <span class="likes">
+              <span>🖤</span>
+              <span>${post._.posts_likes}</span>
+            </span>
+          </section>
         </li>
       `, posts)}
-    </ul>
+      </tbody>
+    </table>
 </div>
 `;
 
 
-const renderNavbar = () => go(
-  [{ name: '프론트엔드', id: 'frontend' }, { name: '백엔드', id: 'backend' }, { name: '인프라', id: 'infra' }, { name: '알고리즘', id: 'algorithm' }],
-  Navbar.tmpl,
+const renderPosts = () => go(
+  PostsApi.fetchPosts(),
+  Posts.tmpl,
   $el,
   $appendTo($qs('body'))
 );
 
-const renderPosts = () => go(
-  PostsApi.fetchPosts(),
-  Posts.tmpl,
+const renderNavbar = () => go(
+  [{ name: '프론트엔드', id: 'frontend' }, { name: '백엔드', id: 'backend' }, { name: '인프라', id: 'infra' }, { name: '알고리즘', id: 'algorithm' },  { name: '로그인', id: 'login', klass: 'login'}],
+  Navbar.tmpl,
   $el,
   $appendTo($qs('body'))
 );

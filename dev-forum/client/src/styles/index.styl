@@ -1,3 +1,110 @@
+black = rgba(41, 41, 41, 1)
+grey = rgba(117, 117, 117, 1)
+lightgrey = rgba(242, 242, 242, 1)
+divider = 1px solid rgba(41, 41, 41, 0.2)
+
 body
-  color red
-  background-color #284b63
+  height 100vh
+  color black
+
+.hidden
+  display none
+
+.navbar
+  width 100%
+  position fixed
+  top 0
+  height 4rem
+  color grey
+  background-color white
+  display flex
+  align-items center
+  justify-content space-between
+  padding 0 20px
+  box-sizing border-box
+
+  .logo
+    font-size 24px
+    font-weight bold
+
+  .menus
+    display flex
+    align-items center
+
+  .menu
+    margin-left 15px
+    a
+      font-size 14px
+      span
+        &:hover:not(.login)
+          border-bottom 2px solid black
+          padding-bottom 2px
+
+    &:hover:not(.login)
+      color black
+
+  .login
+    color white
+    background-color black
+    padding 8px 10px
+    border-radius 8px
+
+
+.posts-container
+  padding 4rem 5rem
+
+.post
+  margin 1rem 0
+  padding 20px 4px
+  border-top divider
+
+  :first-child
+    font-size 12px
+
+  .timestamp
+    margin-left 2px
+    color grey
+
+  .body
+    display flex
+    justify-content space-between
+    align-items center
+    margin-top 10px
+
+    .title
+      font-size 20px
+      font-weight 800
+      line-height 30px
+
+    .desc
+      font-size 14px
+      padding 4px 0
+      line-height 22px
+
+    .thumbnail
+      box-sizing border-box
+      margin-left 18px
+      flex-shrink 0
+      width 100px
+      height 100px
+
+  .footer
+    display flex
+    justify-content space-between
+    align-items center
+    margin-top 10px
+
+    .board
+      background-color lightgrey
+      padding 5px 10px
+      border-radius 12px
+      font-size 12px
+
+    .likes
+      display flex
+      align-items center
+      :first-child
+        margin-right 4px
+
+
+
