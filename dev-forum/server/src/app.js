@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const corsOptions = require('./config/cors');
 const v1 = require('./routes/v1');
+const schema = require('./schema');
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
