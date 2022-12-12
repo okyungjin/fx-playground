@@ -1,4 +1,4 @@
-const { usersTable } = require('../schema/users');
+const { usersTable } = require('./users');
 
 const pg = require('knex')({
   client: 'pg',
@@ -15,4 +15,4 @@ const createTableIfNotExist = (tb_name, f) => pg.schema
   .then(exist => !exist && pg.schema.createTable(tb_name, f));
 
 
-createTableIfNotExist('users', usersTable);
+// createTableIfNotExist('users', usersTable);
